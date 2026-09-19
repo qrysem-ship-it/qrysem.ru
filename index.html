@@ -3,40 +3,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мой сайт qrysem.ru</title>
+    <title>qrysem.ru</title>
     <style>
+        :root {
+            --bg-color: #f5f5f7;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --text-main: #1d1d1f;
+            --text-secondary: #86868b;
+            --accent: #0066cc;
+            --hover-bg: rgba(0, 102, 204, 0.1);
+            --border-color: rgba(0, 0, 0, 0.06);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #000000;
+                --card-bg: rgba(28, 28, 30, 0.7);
+                --text-main: #f5f5f7;
+                --text-secondary: #a1a1a6;
+                --accent: #2997ff;
+                --hover-bg: rgba(41, 151, 255, 0.15);
+                --border-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+
         body {
-            font-family: Arial, sans-serif;
-            max-width: 600px;
-            margin: 50px auto;
-            padding: 20px;
-            background: #f4f4f9;
-            color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 50px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            -webkit-font-smoothing: antialiased;
         }
-        h1 { color: #0066cc; }
-        .card {
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+
+        .avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            font-weight: 600;
             margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
         }
-        a { color: #0066cc; text-decoration: none; }
-        a:hover { text-decoration: underline; }
+
+        h1 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+
+        .bio {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 35px;
+            text-align: center;
+        }
+
+        .links-container {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .link-btn {
+            background-color: var(--card-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px 20px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 1rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+        }
+
+        .link-btn:hover {
+            transform: translateY(-2px);
+            background-color: var(--hover-bg);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .section-header {
+            width: 100%;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin: 25px 0 10px 10px;
+        }
     </style>
 </head>
 <body>
-    <div class="card">
-        <h1>Привет! Это qrysem.ru</h1>
-        <p>Здесь хранятся мои полезные файлы и документы.</p>
+
+    <div class="avatar">Q</div>
+    <h1>qrysem.ru</h1>
+    <div class="bio">Персональная страница и хранилище файлов</div>
+
+    <div class="links-container">
+        <div class="section-header">Социальные сети</div>
+        
+        <a href="https://t.me/ваш_логин" class="link-btn" target="_blank">
+            <span>Telegram</span>
+            <span>→</span>
+        </a>
+        
+        <a href="https://instagram.com/ваш_логин" class="link-btn" target="_blank">
+            <span>Instagram</span>
+            <span>→</span>
+        </a>
+        
+        <a href="https://vk.com/ваш_логин" class="link-btn" target="_blank">
+            <span>VKontakte</span>
+            <span>→</span>
+        </a>
+
+        <div class="section-header">Файлы и документы</div>
+        
+        <a href="document.pdf" class="link-btn" target="_blank">
+            <span>📄 Пример PDF документа</span>
+            <span>↓</span>
+        </a>
     </div>
 
-    <div class="card">
-        <h3>Мои файлы</h3>
-        <ul>
-            <li><a href="document.pdf" targetém="_blank">Пример PDF документа</a></li>
-            <li><a href="имя_вашего_файла.pdf" target="_blank">Название документа</a></li>
-        </ul>
-    </div>
 </body>
 </html>
