@@ -122,3 +122,13 @@ h1 {
     letter-spacing: 0.05em;
     margin: 20px 0 8px 10px;
 }
+.avatar-img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 24px rgba(43, 136, 232, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.8);
+}
+
