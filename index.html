@@ -5,120 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>qrysem.ru</title>
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-    
-    <style>
-        :root {
-            --bg-color: #f2f7fc;
-            --card-bg: rgba(255, 255, 255, 0.85);
-            --text-main: #1d1d1f;
-            --text-secondary: #86868b;
-            --accent: #2b88e8;
-            --hover-bg: rgba(43, 136, 232, 0.1);
-            --border-color: rgba(43, 136, 232, 0.15);
-        }
-
-        @media (prefers-color-scheme: dark) {
-            :root {
-                --bg-color: #0b1118;
-                --card-bg: rgba(22, 27, 34, 0.75);
-                --text-main: #f5f5f7;
-                --text-secondary: #a1a1a6;
-                --accent: #58a6ff;
-                --hover-bg: rgba(88, 166, 255, 0.15);
-                --border-color: rgba(88, 166, 255, 0.2);
-            }
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            max-width: 480px;
-            margin: 0 auto;
-            padding: 60px 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        .avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #70aef6, #2b88e8);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            box-shadow: 0 8px 24px rgba(43, 136, 232, 0.25);
-        }
-
-        h1 {
-            font-size: 2rem;
-            font-weight: 600;
-            letter-spacing: -0.015em;
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .links-container {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .link-btn {
-            background-color: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 14px 18px;
-            color: var(--text-main);
-            text-decoration: none;
-            font-size: 1rem;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.25s ease;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
-        }
-
-        .link-btn:hover {
-            transform: translateY(-2px);
-            background-color: var(--hover-bg);
-            border-color: var(--accent);
-            color: var(--accent);
-        }
-
-        .link-content {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .link-content svg {
-            width: 22px;
-            height: 22px;
-            fill: currentColor;
-        }
-
-        .section-header {
-            width: 100%;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin: 20px 0 8px 10px;
-        }
-    </style>
+    <!-- Подключаем наш файл стилей -->
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
@@ -168,8 +56,6 @@
                 <span>qrysem@ya.ru</span>
             </div>
             <span>✉</span>
-        </a>
-            <span>↓</span>
         </a>
     </div>
 
