@@ -45,25 +45,28 @@ body {
     }
 }
 
-.avatar {
-    width: 80px;
-    height: 80px;
+.avatar-img {
+    width: 90px;
+    height: 90px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #70aef6, #2b88e8);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 32px;
-    font-weight: 600;
-    margin-bottom: 20px;
+    object-fit: cover;
+    margin-bottom: 16px;
     box-shadow: 0 8px 24px rgba(43, 136, 232, 0.25);
+    border: 2px solid rgba(255, 255, 255, 0.9);
 }
 
 h1 {
     font-size: 2rem;
     font-weight: 600;
     letter-spacing: -0.015em;
+    margin-bottom: 4px;
+    text-align: center;
+}
+
+.name-title {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    font-weight: 500;
     margin-bottom: 30px;
     text-align: center;
 }
@@ -122,13 +125,3 @@ h1 {
     letter-spacing: 0.05em;
     margin: 20px 0 8px 10px;
 }
-.avatar-img {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 20px;
-    box-shadow: 0 8px 24px rgba(43, 136, 232, 0.25);
-    border: 2px solid rgba(255, 255, 255, 0.8);
-}
-
