@@ -6,6 +6,8 @@
     --accent: #2b88e8;
     --hover-bg: rgba(43, 136, 232, 0.1);
     --border-color: rgba(43, 136, 232, 0.15);
+    --avatar-border: rgba(255, 255, 255, 0.9);
+    --avatar-shadow: rgba(43, 136, 232, 0.25);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,13 +19,22 @@
         --accent: #58a6ff;
         --hover-bg: rgba(88, 166, 255, 0.15);
         --border-color: rgba(88, 166, 255, 0.2);
+        --avatar-border: rgba(255, 255, 255, 0.12);
+        --avatar-shadow: rgba(0, 0, 0, 0.5);
     }
+}
+
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Segoe UI", Roboto, sans-serif;
     background-color: var(--bg-color);
     color: var(--text-main);
+    min-height: 100vh;
     max-width: 480px;
     margin: 0 auto;
     padding: 60px 20px;
@@ -51,8 +62,8 @@ body {
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 16px;
-    box-shadow: 0 8px 24px rgba(43, 136, 232, 0.25);
-    border: 2px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 8px 24px var(--avatar-shadow);
+    border: 2px solid var(--avatar-border);
 }
 
 h1 {
@@ -76,6 +87,17 @@ h1 {
     display: flex;
     flex-direction: column;
     gap: 12px;
+}
+
+.section-header {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-top: 20px;
+    margin-bottom: 6px;
+    padding-left: 8px;
 }
 
 .link-btn {
@@ -104,6 +126,18 @@ h1 {
     box-shadow: 0 6px 20px rgba(43, 136, 232, 0.15);
 }
 
+.link-btn:active {
+    transform: scale(0.98);
+}
+
+.link-btn > span:last-child {
+    transition: transform 0.25s ease;
+}
+
+.link-btn:hover > span:last-child {
+    transform: translateX(4px);
+}
+
 .link-content {
     display: flex;
     align-items: center;
@@ -114,14 +148,5 @@ h1 {
     width: 22px;
     height: 22px;
     fill: currentColor;
-}
-
-.section-header {
-    width: 100%;
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin: 20px 0 8px 10px;
+    flex-shrink: 0;
 }
