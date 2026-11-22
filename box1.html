@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ячейка номер один</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            /* Мягкий пастельный фон */
+            background: linear-gradient(135deg, #f6ebe6 0%, #aee1f9 100%);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #2f3542;
+        }
+
+        /* Листок-заметка */
+        .note-card {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            /* Тёплый оттенок бумаги с лёгкой разлиновкой */
+            background-color: #fffdf5;
+            background-image: repeating-linear-gradient(
+                transparent,
+                transparent 35px,
+                rgba(164, 176, 190, 0.25) 35px,
+                rgba(164, 176, 190, 0.25) 36px
+            );
+            padding: 46px 28px 36px;
+            border-radius: 3px 3px 16px 3px;
+            box-shadow: 
+                0 12px 28px rgba(0, 0, 0, 0.08),
+                0 2px 6px rgba(0, 0, 0, 0.04);
+            transform: rotate(-1deg);
+            transition: transform 0.25s ease;
+        }
+
+        .note-card:hover {
+            transform: rotate(0deg);
+        }
+
+        /* Полупрозрачный скотч сверху по центру */
+        .tape {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%) rotate(2deg);
+            width: 115px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.65);
+            border-left: 1px dashed rgba(0, 0, 0, 0.08);
+            border-right: 1px dashed rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+            backdrop-filter: blur(2px);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #1e272e;
+            margin-bottom: 24px;
+            letter-spacing: -0.01em;
+        }
+
+        ol {
+            padding-left: 26px;
+            font-size: 1.15rem;
+            line-height: 36px; /* Совпадает с шагом разлиновки */
+        }
+
+        li {
+            padding-left: 6px;
+        }
+
+        li::marker {
+            font-weight: 600;
+            color: #747d8c;
+        }
+
+        /* Для совсем маленьких экранов убираем наклон, чтобы не обрезались края */
+        @media (max-width: 360px) {
+            .note-card {
+                transform: none;
+                padding: 42px 20px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="note-card">
+        <div class="tape" aria-hidden="true"></div>
+        <h1>Ячейка номер один</h1>
+        <ol>
+            <li>Дождик</li>
+            <li>Картон цветной</li>
+            <li>Ножницы</li>
+            <li>Крафтовая бумага</li>
+            <li>Свечки</li>
+        </ol>
+    </main>
+
+</body>
+</html>
