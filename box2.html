@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Контейнер №2</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f6ebe6 0%, #aee1f9 100%);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #2f3542;
+        }
+
+        .note-card {
+            position: relative;
+            width: 100%;
+            max-width: 380px;
+            background-color: #fffdf5;
+            background-image: repeating-linear-gradient(
+                transparent,
+                transparent 35px,
+                rgba(164, 176, 190, 0.25) 35px,
+                rgba(164, 176, 190, 0.25) 36px
+            );
+            padding: 46px 28px 36px;
+            border-radius: 3px 3px 16px 3px;
+            box-shadow:
+                0 12px 28px rgba(0, 0, 0, 0.08),
+                0 2px 6px rgba(0, 0, 0, 0.04);
+            transform: rotate(-1deg);
+            transition: transform 0.25s ease;
+        }
+
+        .note-card.editing {
+            transform: rotate(0deg);
+        }
+
+        .tape {
+            position: absolute;
+            top: -14px;
+            left: 50%;
+            transform: translateX(-50%) rotate(2deg);
+            width: 115px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.65);
+            border-left: 1px dashed rgba(0, 0, 0, 0.08);
+            border-right: 1px dashed rgba(0, 0, 0, 0.08);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+            backdrop-filter: blur(2px);
+        }
+
+        .note-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 1.45rem;
+            font-weight: 700;
+            color: #1e272e;
+            letter-spacing: -0.01em;
+            padding: 0 36px;
+        }
+
+        .edit-btn {
+            position: absolute;
+            right: -6px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 34px;
+            height: 34px;
+            border: none;
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.04);
+            color: #57606f;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        }
+
+        .edit-btn:hover {
+            background: rgba(0, 0, 0, 0.09);
+            color: #1e272e;
+        }
+
+        .edit-btn.active {
+            background: #2ed573;
+            color: #fff;
+        }
+
+        ol {
+            padding-left: 26px;
+            font-size: 1.15rem;
+            line-height: 36px;
+        }
+
+        li {
+            padding-left: 6px;
+            margin-bottom: 4px;
+        }
+
+        li::marker {
+            font-weight: 600;
+            color: #747d8c;
+        }
+
+        .item-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 36px;
+        }
+
+        .item-text {
+            flex: 1;
+            word-break: break-word;
+        }
+
+        .item-input {
+            flex: 1;
+            width: 100%;
+            height: 32px;
+            padding: 2px 8px;
+            font-size: 1.05rem;
+            font-family: inherit;
+            color: #1e272e;
+            background: rgba(255, 255, 255, 0.85);
+            border: 1px solid #ced6e0;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .item-input:focus {
+            border-color: #3742fa;
+        }
+
+        .delete-btn {
+            display: none;
+            width: 26px;
+            height: 26px;
+            flex-shrink: 0;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255, 71, 87, 0.12);
+            color: #ff4757;
+            font-size: 1.1rem;
+            line-height: 1;
+            cursor: pointer;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .delete-btn:hover {
+            background: rgba(255, 71, 87, 0.22);
+        }
+
+        .note-card.editing .delete-btn {
+            display: inline-flex;
+        }
+
+        .edit-controls {
+            display: none;
+            margin-top: 18px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .note-card.editing .edit-controls {
+            display: flex;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 110px;
+            padding: 10px 14px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.15s ease;
+        }
+
+        .action-btn:active {
+            transform: scale(0.98);
+        }
+
+        .add-btn {
+            background: rgba(0, 0, 0, 0.07);
+            color: #2f3542;
+        }
+
+        .save-btn {
+            background: #1e90ff;
+            color: #fff;
+        }
+
+        /* Модальное окно ввода пароля */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.45);
+            backdrop-filter: blur(3px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 100;
+        }
+
+        .modal-backdrop.open {
+            display: flex;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 320px;
+            background: #fff;
+            border-radius: 16px;
+            padding: 22px 20px;
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-box h2 {
+            font-size: 1.15rem;
+            margin-bottom: 12px;
+            color: #1e272e;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            border: 1px solid #dfe4ea;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            outline: none;
+        }
+
+        .modal-input:focus {
+            border-color: #1e90ff;
+        }
+
+        .modal-error {
+            min-height: 20px;
+            font-size: 0.85rem;
+            color: #ff4757;
+            margin-bottom: 10px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 9px 14px;
+            border: none;
+            border-radius: 10px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .modal-cancel {
+            background: #f1f2f6;
+            color: #57606f;
+        }
+
+        .modal-submit {
+            background: #1e90ff;
+            color: #fff;
+        }
+
+        @media (max-width: 360px) {
+            .note-card:not(.editing) {
+                transform: none;
+                padding: 42px 20px 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <main class="note-card" id="noteCard">
+        <div class="tape" aria-hidden="true"></div>
+        <div class="note-header">
+            <h1>Контейнер №2</h1>
+            <button type="button" class="edit-btn" id="editBtn" title="Редактировать список" aria-label="Редактировать список">
+                <!-- Иконка карандаша -->
+                <svg id="pencilIcon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                </svg>
+                <!-- Иконка галочки (появляется во время редактирования) -->
+                <svg id="checkIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display: none;" aria-hidden="true">
+                    <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <ol id="itemsList"></ol>
+
+        <div class="edit-controls">
+            <button type="button" class="action-btn add-btn" id="addItemBtn">+ Пункт</button>
+            <button type="button" class="action-btn save-btn" id="saveBtn">Сохранить</button>
+        </div>
+    </main>
+
+    <!-- Окно ввода пароля -->
+    <div class="modal-backdrop" id="passwordModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-box">
+            <h2 id="modalTitle">Введите пароль</h2>
+            <input type="password" class="modal-input" id="passwordInput" placeholder="Пароль" autocomplete="off">
+            <div class="modal-error" id="modalError"></div>
+            <div class="modal-actions">
+                <button type="button" class="modal-btn modal-cancel" id="cancelModalBtn">Отмена</button>
+                <button type="button" class="modal-btn modal-submit" id="submitPasswordBtn">Войти</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'cell_1_items_v1';
+        const PASS_CODE = 'директор';
+        const DEFAULT_ITEMS = [
+            'Дождик',
+            'Картон цветной',
+            'Ножницы',
+            'Крафтовая бумага',
+            'Свечки'
+        ];
+
+        let items = loadItems();
+        let isEditing = false;
+
+        const noteCard = document.getElementById('noteCard');
+        const itemsList = document.getElementById('itemsList');
+        const editBtn = document.getElementById('editBtn');
+        const pencilIcon = document.getElementById('pencilIcon');
+        const checkIcon = document.getElementById('checkIcon');
+        const addItemBtn = document.getElementById('addItemBtn');
+        const saveBtn = document.getElementById('saveBtn');
+
+        const passwordModal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const modalError = document.getElementById('modalError');
+        const cancelModalBtn = document.getElementById('cancelModalBtn');
+        const submitPasswordBtn = document.getElementById('submitPasswordBtn');
+
+        function loadItems() {
+            try {
+                const raw = localStorage.getItem(STORAGE_KEY);
+                if (!raw) return [...DEFAULT_ITEMS];
+                const parsed = JSON.parse(raw);
+                return Array.isArray(parsed) ? parsed : [...DEFAULT_ITEMS];
+            } catch {
+                return [...DEFAULT_ITEMS];
+            }
+        }
+
+        function saveToStorage(list) {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
+            } catch {
+                // Игнорируем ошибки хранилища в приватном режиме
+            }
+        }
+
+        function renderList() {
+            itemsList.innerHTML = '';
+
+            items.forEach((text, index) => {
+                const li = document.createElement('li');
+                const row = document.createElement('div');
+                row.className = 'item-row';
+
+                if (isEditing) {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.className = 'item-input';
+                    input.value = text;
+                    input.dataset.index = index;
+                    input.addEventListener('keydown', (e) => {
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            collectDraftItems();
+                            items.splice(index + 1, 0, '');
+                            renderList();
+                            const nextInput = itemsList.querySelector(`input[data-index="${index + 1}"]`);
+                            if (nextInput) nextInput.focus();
+                        }
+                    });
+
+                    const delBtn = document.createElement('button');
+                    delBtn.type = 'button';
+                    delBtn.className = 'delete-btn';
+                    delBtn.title = 'Удалить пункт';
+                    delBtn.setAttribute('aria-label', 'Удалить пункт');
+                    delBtn.textContent = '×';
+                    delBtn.addEventListener('click', () => {
+                        collectDraftItems();
+                        items.splice(index, 1);
+                        renderList();
+                    });
+
+                    row.appendChild(input);
+                    row.appendChild(delBtn);
+                } else {
+                    const span = document.createElement('span');
+                    span.className = 'item-text';
+                    span.textContent = text;
+                    row.appendChild(span);
+                }
+
+                li.appendChild(row);
+                itemsList.appendChild(li);
+            });
+        }
+
+        function collectDraftItems() {
+            const inputs = itemsList.querySelectorAll('.item-input');
+            const updated = [];
+            inputs.forEach((inp) => {
+                const val = inp.value.trim();
+                if (val !== '') {
+                    updated.push(val);
+                }
+            });
+            items = updated;
+        }
+
+        function setEditingMode(active) {
+            isEditing = active;
+            noteCard.classList.toggle('editing', active);
+            editBtn.classList.toggle('active', active);
+            pencilIcon.style.display = active ? 'none' : 'block';
+            checkIcon.style.display = active ? 'block' : 'none';
+            renderList();
+
+            if (active) {
+                const firstInput = itemsList.querySelector('.item-input');
+                if (firstInput) firstInput.focus();
+            }
+        }
+
+        function applyChanges() {
+            collectDraftItems();
+            saveToStorage(items);
+            setEditingMode(false);
+        }
+
+        function openPasswordModal() {
+            modalError.textContent = '';
+            passwordInput.value = '';
+            passwordModal.classList.add('open');
+            setTimeout(() => passwordInput.focus(), 50);
+        }
+
+        function closePasswordModal() {
+            passwordModal.classList.remove('open');
+            modalError.textContent = '';
+            passwordInput.value = '';
+        }
+
+        function checkPassword() {
+            const entered = passwordInput.value.trim().toLowerCase();
+            if (entered === PASS_CODE) {
+                closePasswordModal();
+                setEditingMode(true);
+            } else {
+                modalError.textContent = 'Неверный пароль';
+                passwordInput.focus();
+                passwordInput.select();
+            }
+        }
+
+        editBtn.addEventListener('click', () => {
+            if (isEditing) {
+                applyChanges();
+            } else {
+                openPasswordModal();
+            }
+        });
+
+        addItemBtn.addEventListener('click', () => {
+            collectDraftItems();
+            items.push('');
+            renderList();
+            const inputs = itemsList.querySelectorAll('.item-input');
+            if (inputs.length > 0) {
+                inputs[inputs.length - 1].focus();
+            }
+        });
+
+        saveBtn.addEventListener('click', applyChanges);
+
+        cancelModalBtn.addEventListener('click', closePasswordModal);
+        submitPasswordBtn.addEventListener('click', checkPassword);
+
+        passwordInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkPassword();
+            } else if (e.key === 'Escape') {
+                closePasswordModal();
+            }
+        });
+
+        passwordModal.addEventListener('click', (e) => {
+            if (e.target === passwordModal) {
+                closePasswordModal();
+            }
+        });
+
+        renderList();
+    </script>
+</body>
+</html>
