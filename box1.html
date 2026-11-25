@@ -7,12 +7,11 @@
     <style>
         * {
             box-sizing: border-box;
-            margin: 0;
             padding: 0;
+            margin: 0;
         }
 
         body {
-            /* Мягкий пастельный фон */
             background: linear-gradient(135deg, #f6ebe6 0%, #aee1f9 100%);
             min-height: 100vh;
             min-height: 100dvh;
@@ -24,12 +23,10 @@
             color: #2f3542;
         }
 
-        /* Листок-заметка */
         .note-card {
             position: relative;
             width: 100%;
             max-width: 380px;
-            /* Тёплый оттенок бумаги с лёгкой разлиновкой */
             background-color: #fffdf5;
             background-image: repeating-linear-gradient(
                 transparent,
@@ -39,7 +36,7 @@
             );
             padding: 46px 28px 36px;
             border-radius: 3px 3px 16px 3px;
-            box-shadow: 
+            box-shadow:
                 0 12px 28px rgba(0, 0, 0, 0.08),
                 0 2px 6px rgba(0, 0, 0, 0.04);
             transform: rotate(-1deg);
@@ -50,7 +47,6 @@
             transform: rotate(0deg);
         }
 
-        /* Полупрозрачный скотч сверху по центру */
         .tape {
             position: absolute;
             top: -14px;
@@ -77,11 +73,12 @@
         ol {
             padding-left: 26px;
             font-size: 1.15rem;
-            line-height: 36px; /* Совпадает с шагом разлиновки */
+            line-height: 36px;
         }
 
         li {
             padding-left: 6px;
+            overflow-wrap: anywhere;
         }
 
         li::marker {
@@ -89,18 +86,140 @@
             color: #747d8c;
         }
 
+        li.done {
+            color: #a4b0be;
+            text-decoration: line-through;
+        }
+
         .note-actions {
             margin-top: 18px;
             text-align: center;
             line-height: 1.5;
+            font-size: 0.95rem;
         }
 
-        .note-actions a { color: #315474; text-underline-offset: 3px; }
-        li { overflow-wrap: anywhere; }
-        li.done { color: #a4b0be; text-decoration: line-through; }
-        #status { margin-bottom: 8px; }
+        .note-actions a,
+        button.link {
+            color: #315474;
+            text-underline-offset: 3px;
+            background: none;
+            border: none;
+            font: inherit;
+            cursor: pointer;
+            text-decoration: underline;
+        }
 
-        /* Для совсем маленьких экранов убираем наклон, чтобы не обрезались края */
+        #status {
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            color: #747d8c;
+        }
+
+        /* ---- режим редактирования ---- */
+
+        .editor { display: grid; gap: 8px; }
+
+        .row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .row input[type="text"] {
+            flex: 1;
+            min-width: 0;
+            font: inherit;
+            font-size: 1.05rem;
+            color: #2f3542;
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid rgba(120, 136, 150, 0.35);
+            border-radius: 8px;
+            padding: 6px 8px;
+        }
+
+        .row input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: #5b8cae;
+            flex: none;
+        }
+
+        .row button {
+            flex: none;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            line-height: 1;
+            color: #b04a4a;
+            cursor: pointer;
+            padding: 4px 6px;
+        }
+
+        .editor-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 14px;
+        }
+
+        .editor-actions button {
+            font: inherit;
+            font-size: 0.95rem;
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(90, 110, 130, 0.4);
+            background: rgba(255, 255, 255, 0.75);
+            color: #2f3542;
+            cursor: pointer;
+        }
+
+        .editor-actions button.primary {
+            background: #5b8cae;
+            border-color: #5b8cae;
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .editor-actions button:disabled { opacity: 0.6; cursor: default; }
+
+        dialog {
+            border: none;
+            border-radius: 14px;
+            padding: 22px 20px 18px;
+            max-width: 320px;
+            width: calc(100% - 32px);
+            box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+            font: inherit;
+            color: #2f3542;
+        }
+
+        dialog::backdrop { background: rgba(20, 30, 40, 0.35); }
+
+        dialog h2 {
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        dialog input {
+            width: 100%;
+            font: inherit;
+            padding: 9px 10px;
+            border-radius: 9px;
+            border: 1px solid rgba(120, 136, 150, 0.45);
+            margin-bottom: 10px;
+        }
+
+        dialog .error {
+            color: #b04a4a;
+            font-size: 0.88rem;
+            min-height: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        dialog .editor-actions { margin-top: 4px; }
+
         @media (max-width: 360px) {
             .note-card {
                 transform: none;
@@ -113,7 +232,7 @@
 
     <main class="note-card">
         <div class="tape" aria-hidden="true"></div>
-        <h1>Контейнер №1</h1>
+        <h1 id="title">Контейнер №1</h1>
         <ol id="items">
             <li>Дождик</li>
             <li>Картон цветной</li>
@@ -121,49 +240,218 @@
             <li>Крафтовая бумага</li>
             <li>Свечки</li>
         </ol>
+        <div id="editor" class="editor" hidden></div>
         <footer class="note-actions">
             <p id="status" role="status" hidden></p>
-            <a href="https://github.com/qrysem-ship-it/qrysem.ru/edit/main/box1.json">Редактировать список в GitHub</a>
-            <noscript><p><a href="/box1.txt">Открыть актуальный список текстом</a></p></noscript>
+            <div id="edit-actions" hidden>
+                <div class="editor-actions">
+                    <button type="button" id="add">＋ пункт</button>
+                    <button type="button" id="save" class="primary">Сохранить</button>
+                    <button type="button" id="cancel">Отмена</button>
+                </div>
+            </div>
+            <p id="edit-link"><button type="button" class="link" id="start-edit">Редактировать</button></p>
         </footer>
     </main>
 
+    <dialog id="login">
+        <h2>Пароль для правки</h2>
+        <form method="dialog" id="login-form">
+            <input type="password" id="password" autocomplete="current-password" placeholder="пароль">
+            <p class="error" id="login-error"></p>
+            <div class="editor-actions">
+                <button type="submit" class="primary" value="ok">Войти</button>
+                <button type="button" id="login-cancel">Отмена</button>
+            </div>
+        </form>
+    </dialog>
+
     <script>
-        (async () => {
-            const items = document.getElementById('items');
-            const status = document.getElementById('status');
-            const render = entries => items.replaceChildren(...entries.map(entry => {
-                const item = document.createElement('li');
-                item.textContent = entry.text;
-                if (entry.done) item.className = 'done';
-                return item;
+        // Адрес хранилища: список читают все, пишет только тот, кто знает пароль.
+        const API = 'https://qrysem-box1.lapa.ws';
+        const TOKEN_KEY = 'box1-token';
+        const POLL_MS = 20000;
+
+        const itemsEl = document.getElementById('items');
+        const editorEl = document.getElementById('editor');
+        const titleEl = document.getElementById('title');
+        const statusEl = document.getElementById('status');
+        const editActions = document.getElementById('edit-actions');
+        const editLink = document.getElementById('edit-link');
+        const loginDialog = document.getElementById('login');
+        const loginError = document.getElementById('login-error');
+        const passwordInput = document.getElementById('password');
+
+        let state = { title: 'Контейнер №1', items: [] };
+        let editing = false;
+        let saving = false;
+
+        const token = () => localStorage.getItem(TOKEN_KEY) || '';
+
+        function setStatus(text) {
+            statusEl.textContent = text || '';
+            statusEl.hidden = !text;
+        }
+
+        function render() {
+            titleEl.textContent = state.title || 'Контейнер №1';
+            itemsEl.replaceChildren(...state.items.map(item => {
+                const li = document.createElement('li');
+                li.textContent = item.text;
+                if (item.done) li.className = 'done';
+                return li;
             }));
-            const linesToEntries = text => text.split(/\r?\n/)
-                .map(line => line.trim()).filter(Boolean)
-                .map(text => ({ text, done: false }));
-            for (const source of ['/box1.json', '/box1.txt']) {
-                try {
-                    const response = await fetch(source, { cache: 'no-cache' });
-                    if (!response.ok) continue;
-                    if (source.endsWith('.json')) {
-                        const file = JSON.parse(await response.text());
-                        if (!Array.isArray(file.items)) continue;
-                        render(file.items.map(entry => typeof entry === 'string'
-                            ? { text: entry, done: false }
-                            : { text: String(entry.text ?? ''), done: Boolean(entry.done) }));
-                    } else {
-                        render(linesToEntries(await response.text()));
-                    }
-                    if (!items.children.length) {
-                        status.textContent = 'Контейнер пока пуст.';
-                        status.hidden = false;
-                    }
-                    return;
-                } catch (error) { /* пробуем следующий источник */ }
+            if (!state.items.length) setStatus('Контейнер пока пуст.');
+        }
+
+        function renderEditor() {
+            editorEl.replaceChildren(...state.items.map((item, index) => {
+                const row = document.createElement('div');
+                row.className = 'row';
+
+                const check = document.createElement('input');
+                check.type = 'checkbox';
+                check.checked = item.done;
+                check.title = 'сделано';
+                check.addEventListener('change', () => { state.items[index].done = check.checked; });
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.value = item.text;
+                input.maxLength = 300;
+                input.addEventListener('input', () => { state.items[index].text = input.value; });
+
+                const del = document.createElement('button');
+                del.type = 'button';
+                del.textContent = '×';
+                del.title = 'удалить';
+                del.addEventListener('click', () => {
+                    state.items.splice(index, 1);
+                    renderEditor();
+                });
+
+                row.append(check, input, del);
+                return row;
+            }));
+        }
+
+        function enterEdit() {
+            editing = true;
+            editLink.hidden = true;
+            itemsEl.hidden = true;
+            editorEl.hidden = false;
+            editActions.hidden = false;
+            setStatus('');
+            renderEditor();
+        }
+
+        function leaveEdit() {
+            editing = false;
+            editLink.hidden = false;
+            itemsEl.hidden = false;
+            editorEl.hidden = true;
+            editActions.hidden = true;
+        }
+
+        async function load() {
+            try {
+                const response = await fetch(API + '/api/state', { cache: 'no-store' });
+                if (!response.ok) throw new Error('bad status');
+                const fresh = await response.json();
+                if (!Array.isArray(fresh.items)) throw new Error('bad payload');
+                state = { title: fresh.title, items: fresh.items };
+                if (!editing) render();
+                setStatus('');
+                return true;
+            } catch (error) {
+                setStatus('Не удалось получить свежий список. Показан последний загруженный.');
+                return false;
             }
-            status.textContent = 'Не удалось загрузить актуальный список. Показана исходная версия.';
-            status.hidden = false;
-        })();
+        }
+
+        async function save() {
+            if (saving) return;
+            saving = true;
+            const button = document.getElementById('save');
+            button.disabled = true;
+            button.textContent = 'Сохраняю…';
+            try {
+                const response = await fetch(API + '/api/state', {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token() },
+                    body: JSON.stringify({ title: state.title, items: state.items })
+                });
+                if (response.status === 401) {
+                    localStorage.removeItem(TOKEN_KEY);
+                    leaveEdit();
+                    openLogin();
+                    throw new Error('unauthorized');
+                }
+                if (!response.ok) throw new Error('save failed');
+                const fresh = await response.json();
+                state = { title: fresh.title, items: fresh.items };
+                leaveEdit();
+                render();
+                setStatus('Сохранено. Этот список видят все.');
+            } catch (error) {
+                if (error.message !== 'unauthorized') setStatus('Не получилось сохранить. Проверь связь и попробуй ещё раз.');
+            } finally {
+                saving = false;
+                button.disabled = false;
+                button.textContent = 'Сохранить';
+            }
+        }
+
+        function openLogin() {
+            loginError.textContent = '';
+            passwordInput.value = '';
+            loginDialog.showModal();
+            passwordInput.focus();
+        }
+
+        document.getElementById('login-form').addEventListener('submit', async event => {
+            event.preventDefault();
+            loginError.textContent = 'Проверяю…';
+            try {
+                const response = await fetch(API + '/api/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ password: passwordInput.value })
+                });
+                if (response.status === 401) { loginError.textContent = 'Пароль не подошёл.'; return; }
+                if (response.status === 429) { loginError.textContent = 'Слишком много попыток, подожди десять минут.'; return; }
+                if (!response.ok) throw new Error('login failed');
+                const data = await response.json();
+                localStorage.setItem(TOKEN_KEY, data.token);
+                loginDialog.close();
+                enterEdit();
+            } catch (error) {
+                loginError.textContent = 'Не получилось войти. Попробуй ещё раз.';
+            }
+        });
+
+        document.getElementById('login-cancel').addEventListener('click', () => loginDialog.close());
+
+        document.getElementById('start-edit').addEventListener('click', () => {
+            if (token()) { enterEdit(); } else { openLogin(); }
+        });
+
+        document.getElementById('add').addEventListener('click', () => {
+            state.items.push({ text: '', done: false });
+            renderEditor();
+            const inputs = editorEl.querySelectorAll('input[type="text"]');
+            inputs[inputs.length - 1].focus();
+        });
+
+        document.getElementById('save').addEventListener('click', save);
+        document.getElementById('cancel').addEventListener('click', async () => {
+            leaveEdit();
+            await load();
+        });
+
+        load().then(ok => {
+            if (ok) setInterval(() => { if (!editing) load(); }, POLL_MS);
+        });
     </script>
 
 </body>
