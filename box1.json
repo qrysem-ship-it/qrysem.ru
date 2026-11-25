@@ -1,0 +1,25 @@
+{
+  "title": "Контейнер №1",
+  "items": [
+    {
+      "text": "Дождик",
+      "done": false
+    },
+    {
+      "text": "Картон цветной",
+      "done": false
+    },
+    {
+      "text": "Ножницы",
+      "done": false
+    },
+    {
+      "text": "Крафтовая бумага",
+      "done": false
+    },
+    {
+      "text": "Свечки",
+      "done": false
+    }
+  ]
+}
