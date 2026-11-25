@@ -89,6 +89,16 @@
             color: #747d8c;
         }
 
+        .note-actions {
+            margin-top: 18px;
+            text-align: center;
+            line-height: 1.5;
+        }
+
+        .note-actions a { color: #315474; text-underline-offset: 3px; }
+        li { overflow-wrap: anywhere; }
+        #status { margin-bottom: 8px; }
+
         /* Для совсем маленьких экранов убираем наклон, чтобы не обрезались края */
         @media (max-width: 360px) {
             .note-card {
@@ -103,14 +113,44 @@
     <main class="note-card">
         <div class="tape" aria-hidden="true"></div>
         <h1>Контейнер №1</h1>
-        <ol>
+        <ol id="items">
             <li>Дождик</li>
             <li>Картон цветной</li>
             <li>Ножницы</li>
             <li>Крафтовая бумага</li>
             <li>Свечки</li>
         </ol>
+        <footer class="note-actions">
+            <p id="status" role="status" hidden></p>
+            <a href="https://github.com/qrysem-ship-it/qrysem.ru/edit/main/box1.txt">Редактировать список в GitHub</a>
+            <noscript><p><a href="/box1.txt">Открыть актуальный список текстом</a></p></noscript>
+        </footer>
     </main>
+
+    <script>
+        (async () => {
+            const items = document.getElementById('items');
+            const status = document.getElementById('status');
+            try {
+                const response = await fetch('/box1.txt', { cache: 'no-cache' });
+                if (!response.ok) throw new Error('Не удалось загрузить список');
+                const file = await response.text();
+                const entries = file.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
+                items.replaceChildren(...entries.map(text => {
+                    const item = document.createElement('li');
+                    item.textContent = text;
+                    return item;
+                }));
+                if (!entries.length) {
+                    status.textContent = 'Контейнер пока пуст.';
+                    status.hidden = false;
+                }
+            } catch {
+                status.textContent = 'Не удалось загрузить актуальный список. Показана исходная версия.';
+                status.hidden = false;
+            }
+        })();
+    </script>
 
 </body>
 </html>
