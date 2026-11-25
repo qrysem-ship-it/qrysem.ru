@@ -97,6 +97,7 @@
 
         .note-actions a { color: #315474; text-underline-offset: 3px; }
         li { overflow-wrap: anywhere; }
+        li.done { color: #a4b0be; text-decoration: line-through; }
         #status { margin-bottom: 8px; }
 
         /* Для совсем маленьких экранов убираем наклон, чтобы не обрезались края */
@@ -122,7 +123,7 @@
         </ol>
         <footer class="note-actions">
             <p id="status" role="status" hidden></p>
-            <a href="https://github.com/qrysem-ship-it/qrysem.ru/edit/main/box1.txt">Редактировать список в GitHub</a>
+            <a href="https://github.com/qrysem-ship-it/qrysem.ru/edit/main/box1.json">Редактировать список в GitHub</a>
             <noscript><p><a href="/box1.txt">Открыть актуальный список текстом</a></p></noscript>
         </footer>
     </main>
@@ -131,24 +132,37 @@
         (async () => {
             const items = document.getElementById('items');
             const status = document.getElementById('status');
-            try {
-                const response = await fetch('/box1.txt', { cache: 'no-cache' });
-                if (!response.ok) throw new Error('Не удалось загрузить список');
-                const file = await response.text();
-                const entries = file.split(/\r?\n/).map(line => line.trim()).filter(Boolean);
-                items.replaceChildren(...entries.map(text => {
-                    const item = document.createElement('li');
-                    item.textContent = text;
-                    return item;
-                }));
-                if (!entries.length) {
-                    status.textContent = 'Контейнер пока пуст.';
-                    status.hidden = false;
-                }
-            } catch {
-                status.textContent = 'Не удалось загрузить актуальный список. Показана исходная версия.';
-                status.hidden = false;
+            const render = entries => items.replaceChildren(...entries.map(entry => {
+                const item = document.createElement('li');
+                item.textContent = entry.text;
+                if (entry.done) item.className = 'done';
+                return item;
+            }));
+            const linesToEntries = text => text.split(/\r?\n/)
+                .map(line => line.trim()).filter(Boolean)
+                .map(text => ({ text, done: false }));
+            for (const source of ['/box1.json', '/box1.txt']) {
+                try {
+                    const response = await fetch(source, { cache: 'no-cache' });
+                    if (!response.ok) continue;
+                    if (source.endsWith('.json')) {
+                        const file = JSON.parse(await response.text());
+                        if (!Array.isArray(file.items)) continue;
+                        render(file.items.map(entry => typeof entry === 'string'
+                            ? { text: entry, done: false }
+                            : { text: String(entry.text ?? ''), done: Boolean(entry.done) }));
+                    } else {
+                        render(linesToEntries(await response.text()));
+                    }
+                    if (!items.children.length) {
+                        status.textContent = 'Контейнер пока пуст.';
+                        status.hidden = false;
+                    }
+                    return;
+                } catch (error) { /* пробуем следующий источник */ }
             }
+            status.textContent = 'Не удалось загрузить актуальный список. Показана исходная версия.';
+            status.hidden = false;
         })();
     </script>
 
